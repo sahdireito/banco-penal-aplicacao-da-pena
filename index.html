@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banco de Questões — Aplicação da Pena</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f4f1eb;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#222;line-height:1.55;padding:24px 16px 60px}
+.wrap{max-width:860px;margin:0 auto}
+.badge{display:inline-block;background:#1a2a4a;color:#fff;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:8px 14px;border-radius:8px;margin-bottom:14px}
+h1{font-size:26px;color:#1a2a4a;margin-bottom:4px}
+.sub{color:#6b6b6b;font-size:14px;margin-bottom:20px}
+.stats{background:#fff;border-radius:14px;padding:16px 20px;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:16px}
+.srow{display:flex;gap:28px;flex-wrap:wrap;margin-bottom:12px}
+.st{display:flex;flex-direction:column}
+.st b{font-size:24px;color:#1a2a4a}
+.st.ok b{color:#2e7d32}.st.no b{color:#c62828}
+.st span{font-size:12px;color:#777;text-transform:uppercase;letter-spacing:.04em}
+.bar{height:8px;background:#e8e4da;border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:#1a2a4a;transition:width .3s}
+.ptxt{font-size:12px;color:#777;margin-top:6px}
+.nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.nav button{width:38px;height:38px;border:1px solid #ddd6c8;background:#ece8df;border-radius:8px;font-weight:700;color:#555;cursor:pointer;font-size:13px}
+.nav button.act{background:#1a2a4a;color:#fff;border-color:#1a2a4a}
+.nav button.ok{background:#dff0e0;border-color:#9cc9a0;color:#2e7d32}
+.nav button.no{background:#fbe1e1;border-color:#e6a3a3;color:#c62828}
+.nav button.act.ok,.nav button.act.no{outline:3px solid #1a2a4a;outline-offset:1px}
+.qc{display:none;background:#fff;border-radius:14px;padding:22px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.qc.vis{display:block}
+.qh{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.qtag{background:#dfe9f7;color:#1a2a4a;font-weight:700;font-size:12px;padding:4px 10px;border-radius:6px}
+.qex{color:#777;font-size:12.5px}
+.qt{font-weight:700;color:#1a2a4a;font-size:15px;margin:8px 0 10px}
+.en{background:#f7f5f0;border-left:4px solid #1a2a4a;padding:12px 14px;border-radius:0 8px 8px 0;margin-bottom:10px;font-size:15px}
+.cm{font-weight:600;margin-bottom:12px;font-size:15px}
+.alt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:#fff;border:1.5px solid #e2ddd2;border-radius:10px;padding:11px 14px;margin-bottom:8px;cursor:pointer;font-size:14.5px;color:#222;font-family:inherit;line-height:1.5}
+.alt:hover:not(:disabled){border-color:#1a2a4a}
+.alt .lt{flex:0 0 28px;height:28px;border-radius:50%;background:#ece8df;display:flex;align-items:center;justify-content:center;font-weight:700;color:#1a2a4a}
+.alt:disabled{cursor:default}
+.alt.cor{background:#e5f4e6;border-color:#66bb6a}.alt.cor .lt{background:#2e7d32;color:#fff}
+.alt.err{background:#fde8e8;border-color:#ef9a9a}.alt.err .lt{background:#c62828;color:#fff}
+.fb{display:none;margin-top:12px;padding:12px 14px;border-radius:10px;font-size:14px}
+.fb.ok{display:block;background:#e5f4e6;color:#1b5e20}
+.fb.no{display:block;background:#fde8e8;color:#8e1c1c}
+.acts{display:none;gap:8px;flex-wrap:wrap;margin-top:14px;align-items:center}
+.acts.on{display:flex}
+.b1,.b2,.b3{font-family:inherit;font-size:13.5px;font-weight:600;padding:8px 14px;border-radius:8px;cursor:pointer;background:#fff}
+.b1{border:1.5px solid #1a2a4a;color:#1a2a4a}
+.b2{border:1.5px solid #d48a1a;color:#a8650a}
+.b3{border:1.5px solid #bbb;color:#555}
+.gab{margin-left:auto;font-size:13px;color:#555}
+.gab b{color:#1a2a4a;font-size:15px}
+.fu{display:none;margin-top:12px;background:#d8e2f0;border-radius:10px;padding:12px 14px;font-size:14px}
+.ca{display:none;margin-top:12px;background:#fff8e6;border-left:4px solid #e0a12b;border-radius:0 10px 10px 0;padding:12px 14px;font-size:14px}
+.fu.on,.ca.on{display:block}
+.fu h4{color:#1a2a4a;margin-bottom:6px;font-size:14px}
+.ca h4{color:#a8650a;margin-bottom:6px;font-size:14px}
+.pager{display:flex;justify-content:space-between;align-items:center;margin-top:16px}
+.pager button{font-family:inherit;background:#1a2a4a;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-weight:600;cursor:pointer;font-size:14px}
+.pager button:disabled{background:#b9b4aa;cursor:default}
+.pager span{color:#666;font-size:14px}
+.foot{text-align:center;color:#999;font-size:12px;margin-top:28px}
+@media(max-width:560px){h1{font-size:21px}.qc{padding:16px}.gab{margin-left:0;width:100%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="badge">📌 Banco de Questões OAB · Direito Penal</div>
+<h1>Aplicação da Pena</h1>
+<p class="sub">Dosimetria, regime, substituição e sursis (CP, arts. 33, 44, 49, 59 a 68 e 77) · Prof. Caqui · Master5 OAB</p>
+<div class="stats">
+ <div class="srow">
+  <div class="st"><b id="sR">0</b><span>Respondidas</span></div>
+  <div class="st ok"><b id="sA">0</b><span>Acertos</span></div>
+  <div class="st no"><b id="sE">0</b><span>Erros</span></div>
+ </div>
+ <div class="bar"><i id="pb"></i></div>
+ <div class="ptxt" id="pt"></div>
+</div>
+<div class="nav" id="nv"></div>
+<div id="qs"></div>
+<div class="pager">
+ <button id="bp" onclick="go(cur-1)">← Anterior</button>
+ <span id="pi"></span>
+ <button id="bn" onclick="go(cur+1)">Próxima →</button>
+</div>
+<p class="foot">Material elaborado por Sabrine Arantes @sabrinedireito · Uso pessoal · Proibida a reprodução e o repasse · Lei 9.610/98</p>
+</div>
+<script>
+function cl(t){return t.replace(/^(Correto|Errado)\s*[:!.]\s*/,'');}
+const QUESTOES = [
+ {
+  "num": 1,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Sistema trifásico",
+  "enunciado": "Ao sentenciar, o juiz fixou primeiro a pena-base, depois analisou as agravantes e atenuantes e, por fim, as causas de aumento e diminuição.",
+  "comando": "O critério adotado pelo juiz corresponde:",
+  "gabarito": "A",
+  "alternativas": {
+   "A": "ao sistema trifásico, previsto no art. 68 do CP.",
+   "B": "ao sistema bifásico, de Roberto Lyra.",
+   "C": "ao sistema da pena relativamente indeterminada.",
+   "D": "a critério doutrinário, sem previsão legal."
+  },
+  "feedbacks": {
+   "A": "Correto: art. 68 do CP (Nelson Hungria).",
+   "B": "Errado: o CP não adotou o sistema bifásico.",
+   "C": "Errado: o sistema é trifásico.",
+   "D": "Errado: o critério está expresso no art. 68."
+  },
+  "fundamento": "CP, art. 68: a pena-base será fixada atendendo-se ao critério do art. 59 deste Código; em seguida serão consideradas as circunstâncias atenuantes e agravantes; por último, as causas de diminuição e de aumento.",
+  "caqui": "Receita em 3 etapas: base, tempero, ingredientes especiais."
+ },
+ {
+  "num": 2,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Qualificadora x majorante",
+  "enunciado": "Sobre a diferença entre qualificadora e causa de aumento de pena, assinale a afirmativa correta.",
+  "comando": "",
+  "gabarito": "C",
+  "alternativas": {
+   "A": "A qualificadora incide na 2ª fase, como agravante.",
+   "B": "A causa de aumento altera os limites da pena em abstrato, antes da 1ª fase.",
+   "C": "A qualificadora estabelece novos limites mínimo e máximo de pena; a causa de aumento incide na 3ª fase, por fração.",
+   "D": "Ambas incidem na 3ª fase da dosimetria."
+  },
+  "feedbacks": {
+   "A": "Errado: qualificadora não é agravante.",
+   "B": "Errado: isso é a qualificadora.",
+   "C": "Correto: a qualificadora define o ponto de partida.",
+   "D": "Errado: a qualificadora não é fase da dosimetria."
+  },
+  "fundamento": "A qualificadora cria novo preceito secundário (ex.: furto qualificado, art. 155, § 4º — 2 a 8 anos). A causa de aumento é prevista em fração e aplicada na 3ª fase (art. 68).",
+  "caqui": "Qualificadora muda o \"tamanho da forma\"; majorante aumenta a \"receita\" pronta."
+ },
+ {
+  "num": 3,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Circunstâncias judiciais",
+  "enunciado": "Na 1ª fase da dosimetria, o juiz analisa as circunstâncias do art. 59 do CP.",
+  "comando": "Não é circunstância judicial prevista no art. 59:",
+  "gabarito": "B",
+  "alternativas": {
+   "A": "a conduta social.",
+   "B": "a reincidência.",
+   "C": "as consequências do crime.",
+   "D": "o comportamento da vítima."
+  },
+  "feedbacks": {
+   "A": "Errado: a conduta social está no art. 59.",
+   "B": "Correto: a reincidência é agravante (art. 61, I).",
+   "C": "Errado: está no art. 59.",
+   "D": "Errado: está no art. 59."
+  },
+  "fundamento": "CP, art. 59: culpabilidade, antecedentes, conduta social, personalidade do agente, motivos, circunstâncias e consequências do crime e comportamento da vítima. A reincidência é agravante (art. 61, I).",
+  "caqui": "\"CUL-AN-CO-PE, MO-CI-CON-COM\": reincidência não está na lista."
+ },
+ {
+  "num": 4,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Ações em curso",
+  "enunciado": "O juiz elevou a pena-base do réu, por maus antecedentes, porque ele responde a três inquéritos policiais e a uma ação penal ainda sem sentença.",
+  "comando": "A decisão está:",
+  "gabarito": "D",
+  "alternativas": {
+   "A": "correta apenas quanto à ação penal.",
+   "B": "correta, pois revela personalidade voltada para o crime.",
+   "C": "correta, se houver mais de três procedimentos.",
+   "D": "incorreta, pois é vedada a utilização de inquéritos e ações penais em curso para agravar a pena-base."
+  },
+  "feedbacks": {
+   "A": "Errado: a ação em curso também não pode ser usada.",
+   "B": "Errado: viola a presunção de inocência.",
+   "C": "Errado: o número não importa.",
+   "D": "Correto: Súmula 444 do STJ."
+  },
+  "fundamento": "Súmula 444 do STJ: é vedada a utilização de inquéritos policiais e ações penais em curso para agravar a pena-base.",
+  "caqui": "Sem trânsito em julgado, não há antecedente. Processo aberto não \"suja a ficha\"."
+ },
+ {
+  "num": 5,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Bis in idem",
+  "enunciado": "Réu reincidente teve a pena-base aumentada por maus antecedentes, com base na mesma condenação que, na 2ª fase, foi usada como agravante da reincidência.",
+  "comando": "Assinale a afirmativa correta.",
+  "gabarito": "C",
+  "alternativas": {
+   "A": "A dosimetria está correta, pois são fases distintas.",
+   "B": "A reincidência deve ser usada sempre na 1ª fase.",
+   "C": "Houve bis in idem, pois a reincidência não pode ser agravante e circunstância judicial ao mesmo tempo.",
+   "D": "Não há ilegalidade, pois o réu é reincidente."
+  },
+  "feedbacks": {
+   "A": "Errado: a mesma condenação foi usada duas vezes.",
+   "B": "Errado: a reincidência é agravante (2ª fase).",
+   "C": "Correto: Súmula 241 do STJ.",
+   "D": "Errado: há dupla valoração."
+  },
+  "fundamento": "Súmula 241 do STJ: a reincidência penal não pode ser considerada como circunstância agravante e, simultaneamente, como circunstância judicial. (Se houver duas condenações distintas, uma pode ser antecedente e a outra, reincidência.)",
+  "caqui": "Um mesmo fato, um só uso. Usar duas vezes é bis in idem."
+ },
+ {
+  "num": 6,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Maus antecedentes e período depurador",
+  "enunciado": "Bruno cumpriu pena por furto e foi extinta a punibilidade em 2017. Em 2024, praticou um estelionato.",
+  "comando": "Segundo o STF, na dosimetria do estelionato:",
+  "gabarito": "B",
+  "alternativas": {
+   "A": "a condenação anterior não pode ser usada de nenhuma forma.",
+   "B": "a condenação anterior não gera reincidência, mas pode ser valorada como maus antecedentes.",
+   "C": "a condenação anterior é reincidência.",
+   "D": "a condenação anterior só pode ser usada como agravante inominada."
+  },
+  "feedbacks": {
+   "A": "Errado: o STF admite os maus antecedentes.",
+   "B": "Correto: STF, Tema 150.",
+   "C": "Errado: passaram mais de 5 anos (art. 64, I).",
+   "D": "Errado: não existe agravante inominada."
+  },
+  "fundamento": "CP, art. 64, I: não prevalece a condenação anterior para reincidência se decorrido período superior a 5 anos. STF, Tema 150 (RE 593.818): o período depurador não se aplica aos maus antecedentes.",
+  "caqui": "O período depurador \"limpa\" a reincidência, mas não apaga os antecedentes."
+ },
+ {
+  "num": 7,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Comportamento da vítima",
+  "enunciado": "O juiz aumentou a pena-base porque \"a vítima em nada contribuiu para o crime\".",
+  "comando": "Segundo o STJ, a fundamentação é:",
+  "gabarito": "D",
+  "alternativas": {
+   "A": "correta, pois o comportamento da vítima está no art. 59.",
+   "B": "incorreta, pois o comportamento da vítima é causa de diminuição.",
+   "C": "correta, se o crime for violento.",
+   "D": "incorreta, pois o comportamento da vítima só pode ser neutro ou favorável ao réu."
+  },
+  "feedbacks": {
+   "A": "Errado: a ausência de contribuição da vítima é neutra.",
+   "B": "Errado: é circunstância judicial.",
+   "C": "Errado: a natureza do crime não muda a regra.",
+   "D": "Correto: jurisprudência do STJ."
+  },
+  "fundamento": "CP, art. 59: comportamento da vítima. Para o STJ, ele não pode ser valorado negativamente; se a vítima não contribuiu, a circunstância é neutra.",
+  "caqui": "A vítima pode \"ajudar\" o réu, mas nunca prejudicá-lo na dosimetria."
+ },
+ {
+  "num": 8,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Folha de antecedentes",
+  "enunciado": "A defesa alegou que a reincidência só pode ser provada por certidão cartorária de trânsito em julgado.",
+  "comando": "Segundo o STJ:",
+  "gabarito": "C",
+  "alternativas": {
+   "A": "a reincidência só se prova por confissão.",
+   "B": "basta a palavra do delegado.",
+   "C": "a folha de antecedentes criminais é documento suficiente para comprovar os maus antecedentes e a reincidência.",
+   "D": "a defesa está correta."
+  },
+  "feedbacks": {
+   "A": "Errado: não é necessária confissão.",
+   "B": "Errado: exige-se documento.",
+   "C": "Correto: Súmula 636 do STJ.",
+   "D": "Errado: o STJ dispensa a certidão."
+  },
+  "fundamento": "Súmula 636 do STJ: a folha de antecedentes criminais é documento suficiente a comprovar os maus antecedentes e a reincidência.",
+  "caqui": "A \"ficha\" oficial basta."
+ },
+ {
+  "num": 9,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Agravante que qualifica",
+  "enunciado": "Carlos matou a vítima por motivo torpe e foi condenado por homicídio qualificado (art. 121, § 2º, I). Na 2ª fase, o juiz aplicou a agravante do motivo torpe (art. 61, II, \"a\").",
+  "comando": "A decisão está:",
+  "gabarito": "C",
+  "alternativas": {
+   "A": "correta, pois o motivo torpe está no art. 61.",
+   "B": "incorreta, pois agravantes não se aplicam a homicídio.",
+   "C": "incorreta, pois as agravantes só incidem quando não constituem ou qualificam o crime.",
+   "D": "correta, pois a qualificadora e a agravante têm naturezas diferentes."
+  },
+  "feedbacks": {
+   "A": "Errado: o motivo torpe já qualificou o crime.",
+   "B": "Errado: as agravantes se aplicam ao homicídio.",
+   "C": "Correto: art. 61, caput.",
+   "D": "Errado: houve dupla valoração."
+  },
+  "fundamento": "CP, art. 61: são circunstâncias que sempre agravam a pena, quando não constituem ou qualificam o crime.",
+  "caqui": "Se já qualificou, não pode agravar de novo."
+ },
+ {
+  "num": 10,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Agravantes e crime culposo",
+  "enunciado": "Dirigindo imprudentemente, Diego atropelou e matou o próprio pai. Ele não é reincidente.",
+  "comando": "Segundo o entendimento majoritário, a agravante de crime contra ascendente (art. 61, II, \"e\"):",
+  "gabarito": "D",
+  "alternativas": {
+   "A": "incide somente se houver dolo eventual reconhecido pelo júri.",
+   "B": "incide como causa de aumento.",
+   "C": "incide, pois a vítima é ascendente.",
+   "D": "não incide, pois as agravantes do art. 61, II, aplicam-se apenas aos crimes dolosos."
+  },
+  "feedbacks": {
+   "A": "Errado: o enunciado trata de culpa.",
+   "B": "Errado: não é causa de aumento.",
+   "C": "Errado: o crime é culposo.",
+   "D": "Correto: posição majoritária (STJ)."
+  },
+  "fundamento": "Para a jurisprudência majoritária, as agravantes do art. 61, II, do CP são incompatíveis com crimes culposos; a reincidência (inciso I) aplica-se a qualquer crime.",
+  "caqui": "Agravante pressupõe \"querer\": no culposo, não há."
+ },
+ {
+  "num": 11,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Reincidência — conceito",
+  "enunciado": "Eduardo praticou um roubo em 2022. Antes disso, em 2021, havia praticado um furto, cuja condenação só transitou em julgado em 2023.",
+  "comando": "Na sentença do roubo, proferida em 2024, Eduardo:",
+  "gabarito": "B",
+  "alternativas": {
+   "A": "é multirreincidente.",
+   "B": "não é reincidente, pois o roubo foi praticado antes do trânsito em julgado da condenação pelo furto.",
+   "C": "é reincidente específico.",
+   "D": "é reincidente."
+  },
+  "feedbacks": {
+   "A": "Errado: não há reincidência.",
+   "B": "Correto: art. 63.",
+   "C": "Errado: não há reincidência.",
+   "D": "Errado: falta o trânsito em julgado anterior ao novo crime."
+  },
+  "fundamento": "CP, art. 63: verifica-se a reincidência quando o agente comete novo crime, depois de transitar em julgado a sentença que o tenha condenado por crime anterior. (A condenação pode ser valorada como maus antecedentes.)",
+  "caqui": "A ordem importa: primeiro o trânsito em julgado, depois o novo crime."
+ },
+ {
+  "num": 12,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Contravenção e reincidência",
+  "enunciado": "Fábio foi condenado definitivamente por uma contravenção penal e, depois, praticou um crime de furto.",
+  "comando": "Assinale a afirmativa correta.",
+  "gabarito": "B",
+  "alternativas": {
+   "A": "Fábio é reincidente.",
+   "B": "Fábio não é reincidente, pois a lei não prevê reincidência de contravenção anterior para crime posterior.",
+   "C": "Fábio é reincidente por força da LCP.",
+   "D": "Fábio é reincidente específico."
+  },
+  "feedbacks": {
+   "A": "Errado: o art. 63 exige \"crime anterior\".",
+   "B": "Correto: lacuna legal.",
+   "C": "Errado: o art. 7º da LCP trata de nova contravenção.",
+   "D": "Errado: não há reincidência."
+  },
+  "fundamento": "CP, art. 63 (crime anterior → novo crime). LCP, art. 7º: verifica-se a reincidência quando o agente pratica uma contravenção depois de passar em julgado a sentença que o tenha condenado por qualquer crime ou por contravenção.",
+  "caqui": "Contravenção → crime: não há reincidência. É a única combinação que \"não fecha\"."
+ },
+ {
+  "num": 13,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Crimes que não geram reincidência",
+  "enunciado": "Assinale a hipótese em que a condenação anterior não é considerada para efeito de reincidência.",
+  "comando": "",
+  "gabarito": "A",
+  "alternativas": {
+   "A": "Condenação anterior por crime militar próprio.",
+   "B": "Condenação anterior por furto, no estrangeiro.",
+   "C": "Condenação anterior apenas à pena de multa.",
+   "D": "Condenação anterior por crime culposo."
+  },
+  "feedbacks": {
+   "A": "Correto: art. 64, II.",
+   "B": "Errado: a condenação no estrangeiro gera reincidência (art. 63).",
+   "C": "Errado: gera reincidência (só não impede o sursis).",
+   "D": "Errado: crime culposo também gera reincidência."
+  },
+  "fundamento": "CP, art. 64, II: para efeito de reincidência, não se consideram os crimes militares próprios e políticos.",
+  "caqui": "Militar próprio e político: fora da conta."
+ },
+ {
+  "num": 14,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Atenuante da idade",
+  "enunciado": "Gilda tinha 20 anos na data do crime e 22 anos na data da sentença.",
+  "comando": "Assinale a afirmativa correta.",
+  "gabarito": "D",
+  "alternativas": {
+   "A": "Incide causa de diminuição de 1/6.",
+   "B": "Não incide atenuante, pois na sentença ela já tinha mais de 21 anos.",
+   "C": "Incide a atenuante apenas se ela for primária.",
+   "D": "Incide a atenuante da menoridade relativa, pois se considera a idade na data do fato."
+  },
+  "feedbacks": {
+   "A": "Errado: é atenuante (2ª fase).",
+   "B": "Errado: para o menor de 21, vale a data do fato.",
+   "C": "Errado: a primariedade não é requisito.",
+   "D": "Correto: art. 65, I."
+  },
+  "fundamento": "CP, art. 65, I: são circunstâncias que sempre atenuam a pena ser o agente menor de 21 anos, na data do fato, ou maior de 70 anos, na data da sentença. Súmula 74 do STJ: o reconhecimento da menoridade requer prova por documento hábil.",
+  "caqui": "\"21 no FATO, 70 na SENTENÇA\"."
+ },
+ {
+  "num": 15,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Atenuante do idoso",
+  "enunciado": "Hélio tinha 69 anos na data do crime e 71 anos na data da sentença.",
+  "comando": "Quanto à atenuante do art. 65, I, do CP:",
+  "gabarito": "B",
+  "alternativas": {
+   "A": "incide só se ele confessar.",
+   "B": "incide, pois considera-se a idade de 70 anos na data da sentença.",
+   "C": "incide na 3ª fase.",
+   "D": "não incide, pois na data do fato ele tinha menos de 70 anos."
+  },
+  "feedbacks": {
+   "A": "Errado: não depende de confissão.",
+   "B": "Correto: art. 65, I.",
+   "C": "Errado: é atenuante (2ª fase).",
+   "D": "Errado: para o maior de 70, vale a data da sentença."
+  },
+  "fundamento": "CP, art. 65, I: maior de 70 anos, na data da sentença.",
+  "caqui": "O idoso é olhado no dia em que é julgado."
+ },
+ {
+  "num": 16,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Súmula 231",
+  "enunciado": "Furto simples (pena de 1 a 4 anos). A pena-base foi fixada no mínimo e, na 2ª fase, o réu tinha a seu favor a confissão e a menoridade relativa. Não houve causas de aumento ou diminuição.",
+  "comando": "Segundo o STJ, a pena definitiva será de:",
+  "gabarito": "C",
+  "alternativas": {
+   "A": "10 meses.",
+   "B": "6 meses.",
+   "C": "1 ano, pois as atenuantes não podem reduzir a pena abaixo do mínimo legal.",
+   "D": "8 meses."
+  },
+  "feedbacks": {
+   "A": "Errado: viola a Súmula 231.",
+   "B": "Errado: não houve causa de diminuição.",
+   "C": "Correto: Súmula 231 do STJ, mantida em 2024.",
+   "D": "Errado: as atenuantes não levam abaixo do mínimo."
+  },
+  "fundamento": "Súmula 231 do STJ: a incidência da circunstância atenuante não pode conduzir à redução da pena abaixo do mínimo legal. O STJ manteve a súmula em 14/8/2024 (REsp 1.869.764/MS), em linha com o STF (Tema 158).",
+  "caqui": "Na 2ª fase, o \"chão\" é o mínimo legal. Só a 3ª fase fura o chão."
+ },
+ {
+  "num": 17,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "3ª fase abaixo do mínimo",
+  "enunciado": "Furto simples (1 a 4 anos), tentado. Pena-base e intermediária em 1 ano; na 3ª fase, redução de 1/2 pela tentativa.",
+  "comando": "Assinale a afirmativa correta.",
+  "gabarito": "C",
+  "alternativas": {
+   "A": "A pena deve permanecer em 1 ano, pela Súmula 231.",
+   "B": "A pena será de 8 meses.",
+   "C": "A pena será de 6 meses, pois as causas de diminuição podem reduzir a pena abaixo do mínimo.",
+   "D": "A tentativa é atenuante e não pode reduzir abaixo do mínimo."
+  },
+  "feedbacks": {
+   "A": "Errado: a Súmula 231 trata apenas das atenuantes.",
+   "B": "Errado: a fração aplicada foi de 1/2.",
+   "C": "Correto: a 3ª fase pode sair dos limites.",
+   "D": "Errado: a tentativa é causa de diminuição (art. 14, parágrafo único)."
+  },
+  "fundamento": "CP, art. 14, parágrafo único: salvo disposição em contrário, pune-se a tentativa com a pena correspondente ao crime consumado, diminuída de um a dois terços. As causas de diminuição podem levar a pena abaixo do mínimo.",
+  "caqui": "Atenuante tem chão; causa de diminuição, não."
+ },
+ {
+  "num": 18,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Confissão — Súmula 545",
+  "enunciado": "O réu confessou o crime na delegacia e o juiz usou a confissão como um dos fundamentos da condenação, mas negou a atenuante porque o réu se retratou em juízo.",
+  "comando": "Segundo o STJ:",
+  "gabarito": "B",
+  "alternativas": {
+   "A": "a confissão gera causa de diminuição.",
+   "B": "o réu tem direito à atenuante da confissão espontânea.",
+   "C": "a atenuante é indevida, pela retratação.",
+   "D": "a confissão extrajudicial nunca gera atenuante."
+  },
+  "feedbacks": {
+   "A": "Errado: é atenuante (art. 65, III, \"d\").",
+   "B": "Correto: Súmula 545 do STJ.",
+   "C": "Errado: o STJ reconhece a atenuante.",
+   "D": "Errado: a confissão extrajudicial também gera a atenuante."
+  },
+  "fundamento": "Súmula 545 do STJ: quando a confissão for utilizada para a formação do convencimento do julgador, o réu fará jus à atenuante prevista no art. 65, III, \"d\", do CP. O STJ (5ª Turma, REsp 1.972.098/SC, 2022) admite a atenuante ainda que a confissão seja parcial, qualificada, extrajudicial ou retratada.",
+  "caqui": "Confessou e o juiz usou? Atenuante garantida."
+ },
+ {
+  "num": 19,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Confissão no tráfico",
+  "enunciado": "Preso com 2 kg de cocaína, o réu admitiu que a droga era sua, mas afirmou ser apenas para uso próprio. Foi condenado por tráfico.",
+  "comando": "Segundo o STJ, quanto à atenuante da confissão:",
+  "gabarito": "A",
+  "alternativas": {
+   "A": "não incide, pois a atenuante no tráfico exige o reconhecimento da traficância.",
+   "B": "incide como causa de diminuição do art. 33, § 4º.",
+   "C": "incide pela metade.",
+   "D": "incide, pois ele admitiu a posse da droga."
+  },
+  "feedbacks": {
+   "A": "Correto: Súmula 630 do STJ.",
+   "B": "Errado: o tráfico privilegiado tem outros requisitos.",
+   "C": "Errado: não há meia atenuante.",
+   "D": "Errado: admitir o uso não é confessar o tráfico."
+  },
+  "fundamento": "Súmula 630 do STJ: a incidência da atenuante da confissão espontânea no crime de tráfico ilícito de entorpecentes exige o reconhecimento da traficância pelo acusado, não bastando a mera admissão da posse ou propriedade para uso próprio.",
+  "caqui": "Confessar outro crime (uso) não é confessar o tráfico."
+ },
+ {
+  "num": 20,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Confissão x reincidência",
+  "enunciado": "Réu reincidente (uma única condenação anterior, por crime da mesma espécie) confessou espontaneamente o novo crime.",
+  "comando": "Segundo o STJ (Tema 585), na 2ª fase:",
+  "gabarito": "C",
+  "alternativas": {
+   "A": "a reincidência específica sempre prepondera.",
+   "B": "não pode haver compensação, por expressa vedação do art. 67.",
+   "C": "é possível a compensação integral entre a confissão e a reincidência, ainda que específica.",
+   "D": "a confissão sempre prepondera."
+  },
+  "feedbacks": {
+   "A": "Errado: a reincidência específica também se compensa.",
+   "B": "Errado: o STJ admite a compensação.",
+   "C": "Correto: Tema 585 do STJ.",
+   "D": "Errado: há compensação, não preponderância da confissão."
+  },
+  "fundamento": "STJ, Tema 585 (revisado em 2022): é possível a compensação integral da atenuante da confissão espontânea com a agravante da reincidência, seja ela específica ou não. Nos casos de multirreincidência, prepondera a agravante, com compensação apenas proporcional.",
+  "caqui": "Uma reincidência × uma confissão = empate. Multirreincidente \"pesa mais\"."
+ },
+ {
+  "num": 21,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Multirreincidência",
+  "enunciado": "O réu tem três condenações anteriores definitivas que geram reincidência e confessou o novo crime.",
+  "comando": "Segundo o STJ:",
+  "gabarito": "D",
+  "alternativas": {
+   "A": "as três reincidências devem ser usadas na 1ª fase.",
+   "B": "a compensação deve ser integral.",
+   "C": "a confissão deve ser desconsiderada.",
+   "D": "prepondera a reincidência, admitindo-se compensação apenas proporcional com a confissão."
+  },
+  "feedbacks": {
+   "A": "Errado: a reincidência é agravante.",
+   "B": "Errado: na multirreincidência, não há compensação integral.",
+   "C": "Errado: a confissão ainda é considerada.",
+   "D": "Correto: Tema 585 do STJ."
+  },
+  "fundamento": "STJ, Tema 585: nos casos de multirreincidência, deve ser reconhecida a preponderância da agravante do art. 61, I, admitindo-se a sua compensação proporcional com a atenuante da confissão espontânea.",
+  "caqui": "Três reincidências contra uma confissão: a balança pende para a agravante."
+ },
+ {
+  "num": 22,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Circunstâncias preponderantes",
+  "enunciado": "Segundo o art. 67 do CP, no concurso entre agravantes e atenuantes, são preponderantes as circunstâncias que resultam:",
+  "comando": "",
+  "gabarito": "A",
+  "alternativas": {
+   "A": "dos motivos determinantes do crime, da personalidade do agente e da reincidência.",
+   "B": "das consequências do crime e do comportamento da vítima.",
+   "C": "dos antecedentes e da conduta social.",
+   "D": "da confissão e da reparação do dano."
+  },
+  "feedbacks": {
+   "A": "Correto: art. 67.",
+   "B": "Errado: não estão no art. 67.",
+   "C": "Errado: não estão no art. 67.",
+   "D": "Errado: a confissão é discutida na jurisprudência, mas o art. 67 não a menciona."
+  },
+  "fundamento": "CP, art. 67: no concurso de agravantes e atenuantes, a pena deve aproximar-se do limite indicado pelas circunstâncias preponderantes, entendendo-se como tais as que resultam dos motivos determinantes do crime, da personalidade do agente e da reincidência.",
+  "caqui": "Preponderantes: \"MO-PE-RE\" — motivos, personalidade, reincidência."
+ },
+ {
+  "num": 23,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Atenuante inominada",
+  "enunciado": "Sobre as atenuantes, assinale a afirmativa correta.",
+  "comando": "",
+  "gabarito": "D",
+  "alternativas": {
+   "A": "O rol do art. 65 é taxativo.",
+   "B": "A atenuante inominada só pode ser aplicada na 3ª fase.",
+   "C": "Assim como as atenuantes, as agravantes admitem figura inominada.",
+   "D": "A pena pode ser atenuada por circunstância relevante, anterior ou posterior ao crime, ainda que não prevista expressamente em lei."
+  },
+  "feedbacks": {
+   "A": "Errado: o art. 66 permite atenuantes inominadas.",
+   "B": "Errado: é aplicada na 2ª fase.",
+   "C": "Errado: o rol das agravantes é taxativo.",
+   "D": "Correto: art. 66."
+  },
+  "fundamento": "CP, art. 66: a pena poderá ser ainda atenuada em razão de circunstância relevante, anterior ou posterior ao crime, embora não prevista expressamente em lei.",
+  "caqui": "Atenuante tem \"porta aberta\" (art. 66); agravante, \"porta fechada\"."
+ },
+ {
+  "num": 24,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Várias majorantes da Parte Especial",
+  "enunciado": "O réu foi condenado por crime com duas causas de aumento previstas na Parte Especial do CP.",
+  "comando": "Segundo o art. 68, parágrafo único, do CP, o juiz:",
+  "gabarito": "D",
+  "alternativas": {
+   "A": "deve aplicar obrigatoriamente as duas.",
+   "B": "deve aplicar a menor delas.",
+   "C": "deve somar as frações e aplicar o resultado.",
+   "D": "pode limitar-se a um só aumento, prevalecendo a causa que mais aumente."
+  },
+  "feedbacks": {
+   "A": "Errado: o juiz pode aplicar só uma.",
+   "B": "Errado: prevalece a que mais aumente.",
+   "C": "Errado: não há essa regra.",
+   "D": "Correto: art. 68, parágrafo único."
+  },
+  "fundamento": "CP, art. 68, parágrafo único: no concurso de causas de aumento ou de diminuição previstas na parte especial, pode o juiz limitar-se a um só aumento ou a uma só diminuição, prevalecendo, todavia, a causa que mais aumente ou diminua.",
+  "caqui": "Duas majorantes da Parte Especial? O juiz pode ficar com a \"mais forte\"."
+ },
+ {
+  "num": 25,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Súmula 443",
+  "enunciado": "Em roubo com duas majorantes do art. 157, § 2º, o juiz aumentou a pena em 1/2, apenas porque \"havia duas causas de aumento\".",
+  "comando": "A decisão:",
+  "gabarito": "B",
+  "alternativas": {
+   "A": "é ilegal, pois a fração deveria ser de 2/3.",
+   "B": "é ilegal, pois o aumento exige fundamentação concreta, não bastando o número de majorantes.",
+   "C": "está correta, pois a fração de 1/2 é obrigatória.",
+   "D": "está correta, pois mais majorantes justificam fração maior."
+  },
+  "feedbacks": {
+   "A": "Errado: o § 2º prevê de 1/3 até metade.",
+   "B": "Correto: Súmula 443 do STJ.",
+   "C": "Errado: a fração varia de 1/3 até metade.",
+   "D": "Errado: o número não basta."
+  },
+  "fundamento": "Súmula 443 do STJ: o aumento na terceira fase de aplicação da pena no crime de roubo circunstanciado exige fundamentação concreta, não sendo suficiente para a sua exasperação a mera indicação do número de majorantes.",
+  "caqui": "Contar majorantes não é fundamentar."
+ },
+ {
+  "num": 26,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Cálculo da pena",
+  "enunciado": "Roubo (4 a 10 anos), circunstâncias judiciais favoráveis, réu reincidente (agravante fixada em 1/6), emprego de arma de fogo (aumento de 2/3).",
+  "comando": "A pena definitiva será de:",
+  "gabarito": "B",
+  "alternativas": {
+   "A": "4 anos e 8 meses.",
+   "B": "7 anos, 9 meses e 10 dias.",
+   "C": "8 anos.",
+   "D": "6 anos e 8 meses."
+  },
+  "feedbacks": {
+   "A": "Errado: faltou a 3ª fase.",
+   "B": "Correto: 4a → 4a8m → +2/3 = 7a9m10d.",
+   "C": "Errado: as frações não foram aplicadas corretamente.",
+   "D": "Errado: esqueceu a reincidência."
+  },
+  "fundamento": "1ª fase: 4 anos. 2ª fase: + 1/6 = 4 anos e 8 meses (56 meses). 3ª fase: + 2/3 de 56 meses = 37 meses e 10 dias, total de 93 meses e 10 dias = 7 anos, 9 meses e 10 dias (CP, art. 157, § 2º-A, I).",
+  "caqui": "Calcule em cascata: cada fração sobre o resultado anterior."
+ },
+ {
+  "num": 27,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Pena de multa",
+  "enunciado": "Sobre a pena de multa, assinale a afirmativa correta.",
+  "comando": "",
+  "gabarito": "A",
+  "alternativas": {
+   "A": "Varia de 10 a 360 dias-multa, e o valor do dia-multa vai de 1/30 a 5 vezes o salário mínimo, podendo ser aumentada até o triplo pela situação econômica do réu.",
+   "B": "O valor do dia-multa é fixado em 1 salário mínimo.",
+   "C": "Varia de 5 a 100 dias-multa.",
+   "D": "No concurso de crimes, aplica-se a multa mais grave, aumentada de 1/6."
+  },
+  "feedbacks": {
+   "A": "Correto: arts. 49 e 60, § 1º.",
+   "B": "Errado: o valor varia.",
+   "C": "Errado: o mínimo é 10 e o máximo 360.",
+   "D": "Errado: as multas são aplicadas distinta e integralmente (art. 72)."
+  },
+  "fundamento": "CP, art. 49: a pena de multa será, no mínimo, de 10 e, no máximo, de 360 dias-multa. § 1º: o valor do dia-multa não pode ser inferior a 1/30 do salário mínimo nem superior a 5 vezes esse salário. Art. 60, § 1º: a multa pode ser aumentada até o triplo se o juiz considerar que é ineficaz.",
+  "caqui": "Multa: 10 a 360 dias, 1/30 a 5 SM, até o triplo para o rico."
+ },
+ {
+  "num": 28,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Regime inicial — não reincidente",
+  "enunciado": "Réu primário, com circunstâncias judiciais favoráveis, foi condenado a 6 anos de reclusão.",
+  "comando": "O regime inicial cabível é o:",
+  "gabarito": "B",
+  "alternativas": {
+   "A": "aberto.",
+   "B": "semiaberto.",
+   "C": "fechado.",
+   "D": "domiciliar."
+  },
+  "feedbacks": {
+   "A": "Errado: o aberto é para pena até 4 anos.",
+   "B": "Correto: art. 33, § 2º, \"b\".",
+   "C": "Errado: o fechado é para pena acima de 8 anos.",
+   "D": "Errado: não é regime inicial do CP."
+  },
+  "fundamento": "CP, art. 33, § 2º: a) pena superior a 8 anos — fechado; b) não reincidente, pena superior a 4 e não excedente a 8 — semiaberto; c) não reincidente, pena igual ou inferior a 4 — aberto.",
+  "caqui": "> 8 fechado; > 4 a 8 semiaberto; ≤ 4 aberto."
+ },
+ {
+  "num": 29,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Regime — reincidente",
+  "enunciado": "Réu reincidente, com circunstâncias judiciais favoráveis, foi condenado a 3 anos de reclusão.",
+  "comando": "Segundo o STJ, o regime inicial pode ser o:",
+  "gabarito": "B",
+  "alternativas": {
+   "A": "fechado, obrigatoriamente.",
+   "B": "semiaberto.",
+   "C": "domiciliar.",
+   "D": "aberto."
+  },
+  "feedbacks": {
+   "A": "Errado: o STJ admite o semiaberto.",
+   "B": "Correto: Súmula 269 do STJ.",
+   "C": "Errado: não é regime inicial do CP.",
+   "D": "Errado: o reincidente não tem direito ao aberto."
+  },
+  "fundamento": "Súmula 269 do STJ: é admissível a adoção do regime prisional semiaberto aos reincidentes condenados a pena igual ou inferior a quatro anos se favoráveis as circunstâncias judiciais.",
+  "caqui": "Reincidente com pena baixa e \"ficha\" boa no art. 59: semiaberto."
+ },
+ {
+  "num": 30,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Gravidade abstrata",
+  "enunciado": "Réu primário, pena-base no mínimo legal, condenado a 4 anos de reclusão. O juiz fixou o regime fechado porque \"o crime é grave e causa intranquilidade social\".",
+  "comando": "A decisão:",
+  "gabarito": "A",
+  "alternativas": {
+   "A": "é ilegal, pois a gravidade abstrata do crime não justifica regime mais severo que o cabível.",
+   "B": "é ilegal, pois o regime deveria ser o semiaberto.",
+   "C": "está correta, se o crime for hediondo.",
+   "D": "está correta, pela discricionariedade do juiz."
+  },
+  "feedbacks": {
+   "A": "Correto: Súmulas 718 e 719 do STF e 440 do STJ.",
+   "B": "Errado: o regime cabível é o aberto.",
+   "C": "Errado: o regime fechado obrigatório foi declarado inconstitucional.",
+   "D": "Errado: exige-se motivação idônea e concreta."
+  },
+  "fundamento": "Súmula 718 do STF: a opinião do julgador sobre a gravidade em abstrato do crime não constitui motivação idônea para a imposição de regime mais severo do que o permitido segundo a pena aplicada. Súmula 719 do STF e Súmula 440 do STJ, no mesmo sentido.",
+  "caqui": "Para endurecer o regime, o juiz precisa de fato concreto, não de opinião."
+ },
+ {
+  "num": 31,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Detenção",
+  "enunciado": "O réu foi condenado a 9 anos de detenção.",
+  "comando": "O regime inicial será o:",
+  "gabarito": "C",
+  "alternativas": {
+   "A": "fechado, pois a pena supera 8 anos.",
+   "B": "aberto.",
+   "C": "semiaberto, pois a pena de detenção não começa em regime fechado.",
+   "D": "fechado ou semiaberto, a critério do juiz."
+  },
+  "feedbacks": {
+   "A": "Errado: a detenção só chega ao fechado por regressão.",
+   "B": "Errado: a pena é alta para o aberto.",
+   "C": "Correto: art. 33, caput.",
+   "D": "Errado: o fechado não é regime inicial da detenção."
+  },
+  "fundamento": "CP, art. 33: a pena de reclusão deve ser cumprida em regime fechado, semiaberto ou aberto. A de detenção, em regime semiaberto, ou aberto, salvo necessidade de transferência a regime fechado.",
+  "caqui": "Detenção não \"nasce\" no fechado; só vai para lá por regressão."
+ },
+ {
+  "num": 32,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Substituição — requisitos",
+  "enunciado": "Réu primário foi condenado a 3 anos de reclusão por furto qualificado, com circunstâncias judiciais favoráveis.",
+  "comando": "Assinale a afirmativa correta.",
+  "gabarito": "A",
+  "alternativas": {
+   "A": "Cabe a substituição por uma pena restritiva de direitos e multa, ou por duas restritivas de direitos.",
+   "B": "Não cabe substituição, pois o furto é qualificado.",
+   "C": "Cabe a substituição apenas por multa.",
+   "D": "Cabe apenas o sursis."
+  },
+  "feedbacks": {
+   "A": "Correto: art. 44, I a III, e § 2º.",
+   "B": "Errado: a qualificadora não impede a substituição.",
+   "C": "Errado: pena acima de 1 ano.",
+   "D": "Errado: a substituição prefere ao sursis."
+  },
+  "fundamento": "CP, art. 44: pena não superior a 4 anos, crime sem violência ou grave ameaça, réu não reincidente em crime doloso e circunstâncias favoráveis. § 2º: se superior a 1 ano, a pena pode ser substituída por uma restritiva de direitos e multa ou por duas restritivas de direitos.",
+  "caqui": "Até 4 anos, sem violência, não reincidente doloso, art. 59 favorável: substitui."
+ },
+ {
+  "num": 33,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Substituição — crime culposo",
+  "enunciado": "Réu primário foi condenado a 5 anos de detenção por homicídio culposo no trânsito.",
+  "comando": "Quanto à substituição da pena:",
+  "gabarito": "A",
+  "alternativas": {
+   "A": "é cabível, pois, no crime culposo, a substituição independe da quantidade da pena.",
+   "B": "é incabível, pois a pena supera 4 anos.",
+   "C": "é cabível apenas por multa.",
+   "D": "é incabível, pois houve morte."
+  },
+  "feedbacks": {
+   "A": "Correto: art. 44, I.",
+   "B": "Errado: o limite de 4 anos não se aplica ao culposo.",
+   "C": "Errado: a pena supera 1 ano.",
+   "D": "Errado: o resultado morte não impede."
+  },
+  "fundamento": "CP, art. 44, I: aplicada pena privativa de liberdade não superior a quatro anos e o crime não for cometido com violência ou grave ameaça à pessoa ou, qualquer que seja a pena aplicada, se o crime for culposo.",
+  "caqui": "Crime culposo: o \"teto\" de 4 anos não existe."
+ },
+ {
+  "num": 34,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Substituição e violência doméstica",
+  "enunciado": "Réu primário foi condenado a 3 meses de detenção por lesão corporal leve contra a companheira, no âmbito doméstico.",
+  "comando": "Quanto à substituição da pena:",
+  "gabarito": "D",
+  "alternativas": {
+   "A": "é cabível por pena de cesta básica.",
+   "B": "é cabível, pela pena baixa.",
+   "C": "é cabível apenas por multa.",
+   "D": "é incabível, pois a prática de crime com violência contra a mulher no ambiente doméstico impossibilita a substituição."
+  },
+  "feedbacks": {
+   "A": "Errado: a Lei Maria da Penha veda cesta básica.",
+   "B": "Errado: a Súmula 588 veda.",
+   "C": "Errado: a Lei Maria da Penha veda multa isolada.",
+   "D": "Correto: Súmula 588 do STJ."
+  },
+  "fundamento": "Súmula 588 do STJ: a prática de crime ou contravenção penal contra a mulher com violência ou grave ameaça no ambiente doméstico impossibilita a substituição da pena privativa de liberdade por restritiva de direitos. Lei 11.340/06, art. 17.",
+  "caqui": "Violência doméstica: sem substituição, sem cesta básica, sem multa isolada."
+ },
+ {
+  "num": 35,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Substituição e reincidente",
+  "enunciado": "O réu é reincidente: a condenação anterior foi por receptação; a atual, por furto simples, com pena de 2 anos.",
+  "comando": "Quanto à substituição da pena:",
+  "gabarito": "C",
+  "alternativas": {
+   "A": "é vedada a qualquer reincidente.",
+   "B": "só é possível por multa.",
+   "C": "pode ser concedida, se socialmente recomendável, pois a reincidência não é pelo mesmo crime.",
+   "D": "é obrigatória."
+  },
+  "feedbacks": {
+   "A": "Errado: o § 3º admite exceção.",
+   "B": "Errado: não há essa limitação.",
+   "C": "Correto: art. 44, § 3º.",
+   "D": "Errado: depende de ser socialmente recomendável."
+  },
+  "fundamento": "CP, art. 44, § 3º: se o condenado for reincidente, o juiz poderá aplicar a substituição, desde que, em face de condenação anterior, a medida seja socialmente recomendável e a reincidência não se tenha operado em virtude da prática do mesmo crime.",
+  "caqui": "Reincidente \"genérico\" pode; reincidente no mesmo crime, não."
+ },
+ {
+  "num": 36,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Sursis",
+  "enunciado": "Réu primário foi condenado a 1 ano e 6 meses de reclusão por crime cometido com grave ameaça, com circunstâncias judiciais favoráveis.",
+  "comando": "Assinale a afirmativa correta.",
+  "gabarito": "A",
+  "alternativas": {
+   "A": "Cabe o sursis, pois a substituição é incabível e a pena não supera 2 anos.",
+   "B": "Não cabe nenhum benefício.",
+   "C": "Cabe a suspensão condicional do processo.",
+   "D": "Cabe a substituição por restritivas de direitos."
+  },
+  "feedbacks": {
+   "A": "Correto: art. 77.",
+   "B": "Errado: o sursis é possível.",
+   "C": "Errado: já houve condenação.",
+   "D": "Errado: o crime tem grave ameaça."
+  },
+  "fundamento": "CP, art. 77: a execução da pena privativa de liberdade, não superior a 2 anos, poderá ser suspensa, por 2 a 4 anos, desde que: I — o condenado não seja reincidente em crime doloso; II — as circunstâncias autorizem; III — não seja indicada ou cabível a substituição prevista no art. 44.",
+  "caqui": "Primeiro tenta substituir; se não der, olha o sursis."
+ },
+ {
+  "num": 37,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Sursis etário",
+  "enunciado": "Réu de 72 anos, primário, foi condenado a 3 anos e 6 meses de reclusão por crime cometido com violência, com circunstâncias judiciais favoráveis.",
+  "comando": "Assinale a afirmativa correta.",
+  "gabarito": "A",
+  "alternativas": {
+   "A": "Cabe o sursis etário, com período de prova de 4 a 6 anos.",
+   "B": "Cabe a substituição por restritivas de direitos.",
+   "C": "Cabe o sursis simples, com período de prova de 2 a 4 anos.",
+   "D": "Não cabe sursis, pois a pena supera 2 anos."
+  },
+  "feedbacks": {
+   "A": "Correto: art. 77, § 2º.",
+   "B": "Errado: houve violência.",
+   "C": "Errado: a pena supera 2 anos.",
+   "D": "Errado: o sursis etário admite pena até 4 anos."
+  },
+  "fundamento": "CP, art. 77, § 2º: a execução da pena privativa de liberdade, não superior a 4 anos, poderá ser suspensa, por 4 a 6 anos, desde que o condenado seja maior de 70 anos de idade, ou razões de saúde justifiquem a suspensão.",
+  "caqui": "Maior de 70 ou doente: sursis até 4 anos, prova de 4 a 6."
+ },
+ {
+  "num": 38,
+  "exame": "Inédita — estilo FGV",
+  "titulo": "Sursis e multa anterior",
+  "enunciado": "O réu já foi condenado definitivamente, por crime doloso, apenas à pena de multa. Agora foi condenado a 1 ano e 8 meses por crime com grave ameaça.",
+  "comando": "Quanto ao sursis:",
+  "gabarito": "D",
+  "alternativas": {
+   "A": "é vedado, pois a pena supera 1 ano.",
+   "B": "é vedado, por ser reincidente em crime doloso.",
+   "C": "só cabe se houver reparação do dano.",
+   "D": "pode ser concedido, pois a condenação anterior a pena de multa não impede o benefício."
+  },
+  "feedbacks": {
+   "A": "Errado: o limite é de 2 anos.",
+   "B": "Errado: o § 1º afasta o impedimento.",
+   "C": "Errado: a reparação é condição do sursis especial.",
+   "D": "Correto: art. 77, § 1º."
+  },
+  "fundamento": "CP, art. 77, § 1º: a condenação anterior a pena de multa não impede a concessão do benefício.",
+  "caqui": "Reincidência por multa: não bloqueia o sursis."
+ }
+];
+let cur = 0;
+const st = {};
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function init(){
+  const nv=document.getElementById('nv'), qs=document.getElementById('qs');
+  QUESTOES.forEach((q,i)=>{
+    const b=document.createElement('button'); b.textContent=q.num; b.onclick=()=>go(i); nv.appendChild(b);
+    qs.appendChild(bc(q,i));
+  });
+  go(0); us();
+}
+function bc(q,i){
+  const d=document.createElement('div'); d.className='qc'; d.id='q'+i;
+  let h='<div class="qh"><span class="qtag">Questão '+q.num+'</span><span class="qex">'+esc(q.exame)+'</span></div>';
+  h+='<div class="qt">'+esc(q.titulo)+'</div>';
+  h+='<div class="en">'+esc(q.enunciado)+'</div><div class="cm">'+esc(q.comando)+'</div>';
+  ['A','B','C','D'].forEach(l=>{
+    h+='<button class="alt" data-l="'+l+'" onclick="resp('+i+',\''+l+'\')"><span class="lt">'+l+'</span><span>'+esc(q.alternativas[l])+'</span></button>';
+  });
+  h+='<div class="fb" id="fb'+i+'"></div>';
+  h+='<div class="acts" id="ac'+i+'"><button class="b1" onclick="tF('+i+')">Ver fundamento legal</button>';
+  h+='<button class="b2" onclick="tX('+i+')">Explicação do Prof. Caqui</button>';
+  h+='<button class="b3" onclick="rst('+i+')">↺ Tentar novamente</button>';
+  h+='<span class="gab">Gabarito: <b>'+q.gabarito+'</b></span></div>';
+  h+='<div class="fu" id="fu'+i+'"><h4>📖 Fundamento legal</h4>'+esc(q.fundamento)+'</div>';
+  h+='<div class="ca" id="ca'+i+'"><h4>🍊 Explicação didática do Professor Caqui</h4>'+esc(q.caqui)+'</div>';
+  d.innerHTML=h; return d;
+}
+function resp(i,l){
+  if(st[i]) return;
+  const q=QUESTOES[i], ok=l===q.gabarito; st[i]=ok?'ok':'no';
+  document.querySelectorAll('#q'+i+' .alt').forEach(b=>{
+    b.disabled=true;
+    if(b.dataset.l===q.gabarito) b.classList.add('cor');
+    else if(b.dataset.l===l) b.classList.add('err');
+  });
+  const fb=document.getElementById('fb'+i);
+  fb.className='fb '+(ok?'ok':'no');
+  fb.innerHTML=(ok?'<b>✓ Correto!</b> ':'<b>✗ Incorreto.</b> ')+esc(cl(q.feedbacks[l]))+(ok?'':' <br><b>Gabarito: '+q.gabarito+'</b> — '+esc(cl(q.feedbacks[q.gabarito])));
+  document.getElementById('ac'+i).classList.add('on');
+  nav(); us();
+}
+function tF(i){document.getElementById('fu'+i).classList.toggle('on');}
+function tX(i){document.getElementById('ca'+i).classList.toggle('on');}
+function rst(i){
+  delete st[i];
+  document.querySelectorAll('#q'+i+' .alt').forEach(b=>{b.disabled=false;b.classList.remove('cor','err');});
+  document.getElementById('fb'+i).className='fb';
+  document.getElementById('ac'+i).classList.remove('on');
+  document.getElementById('fu'+i).classList.remove('on');
+  document.getElementById('ca'+i).classList.remove('on');
+  nav(); us();
+}
+function go(i){
+  if(i<0||i>=QUESTOES.length) return;
+  document.querySelectorAll('.qc').forEach(e=>e.classList.remove('vis'));
+  document.getElementById('q'+i).classList.add('vis');
+  cur=i; nav(); upd();
+}
+function nav(){
+  document.querySelectorAll('#nv button').forEach((b,i)=>{
+    b.className=(i===cur?'act ':'')+(st[i]||'');
+  });
+}
+function upd(){
+  document.getElementById('pi').textContent=(cur+1)+' de '+QUESTOES.length;
+  document.getElementById('bp').disabled=cur===0;
+  document.getElementById('bn').disabled=cur===QUESTOES.length-1;
+}
+function us(){
+  const v=Object.values(st), a=v.filter(x=>x==='ok').length, n=QUESTOES.length;
+  document.getElementById('sR').textContent=v.length;
+  document.getElementById('sA').textContent=a;
+  document.getElementById('sE').textContent=v.length-a;
+  document.getElementById('pb').style.width=(v.length/n*100)+'%';
+  document.getElementById('pt').textContent=v.length+' de '+n+' respondidas';
+}
+init();
+</script>
+</body>
+</html>
